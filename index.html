@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>app.py — vRTUdroid</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Prism.js for syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 32px; background:#f7f8fb; color:#111; }
+    .container { max-width: 1000px; margin: 0 auto; }
+    pre { padding: 20px; border-radius: 8px; box-shadow: 0 2px 12px rgba(2,6,23,.06); overflow:auto; background:white; }
+    header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+    h1 { font-size:20px; margin:0; }
+    small { color:#666; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>app.py — <small>vRTUdroid</small></h1>
+        <small id="status">Loading file...</small>
+      </div>
+      <div>
+        <a href="https://github.com/{GITHUB_USER}/{REPO}/blob/{BRANCH}/app.py" target="_blank">View on GitHub</a>
+      </div>
+    </header>
+
+    <pre><code id="source" class="language-python"></code></pre>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script>
+    const rawUrl = "https://raw.githubusercontent.com/{GITHUB_USER}/{REPO}/{BRANCH}/app.py";
+    const status = document.getElementById('status');
+    fetch(rawUrl)
+      .then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(text => {
+        document.getElementById('source').textContent = text;
+        Prism.highlightElement(document.getElementById('source'));
+        status.textContent = "Loaded from " + rawUrl;
+      })
+      .catch(err => {
+        document.getElementById('source').textContent = "# Could not fetch file: " + err;
+        status.textContent = "Failed to load file.";
+      });
+  </script>
+</body>
+</html>
