@@ -3,8 +3,12 @@ import uuid
 import time
 import requests
 from urllib.parse import urlparse
+import logging
 
 app = Flask(__name__)
+
+# Set up logging for debugging
+logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/')
 def index():
@@ -292,18 +296,17 @@ def index():
                       <i class="material-icons heartbeat" style="font-size: 48px; color: {color}; border-radius: 50%;">{icon}</i>
                       <h2 style="font-weight: bold; margin-top: 10px;">Loading...</h2>
                       <h5 style="font-weight: bold; font-size: 12px;">Please wait while the PDF loads</h5>
-
                     </div>
                     <div class="error-message" style="display: none; flex-direction: column; justify-content: center; align-items: center; height: 100%;">
                       <i class="material-icons" style="font-size: 48px; color: #E74C3C;">error</i>
-
                       <h2 style="font-weight: bold; margin-top: 10px; font-size: 12px;">Unable to load session</h2>
                       <h3 style="font-weight: bold; font-size: 12px;">Please try again</h3>
                       <div style="margin-top: 20px;">
                         <button type="button" class="btn btn-primary try-again" data-pdf-url="{session['link']}">Try Again</button>
                       </div>
                     </div>
-                    <iframe style="width: 100%; height: 100%; border: none; display: none;"></iframe>
+                   <iframe style="width: 100%; height: 100%; border: none; display: none; background-color: #313131;"></iframe>
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary back-to-sessions" data-branch-modal="{branch_modal_id}">Back</button>
@@ -329,58 +332,58 @@ def index():
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css?v={cache_bust}" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Symbols+Outlined&v={cache_bust}" rel="stylesheet">
   <style>
-    body {{ 
-      overflow-x: hidden; 
-      background-color: #ffffff; 
+    body {{
+      overflow-x: hidden;
+      background-color: #ffffff;
     }}
-    .container {{ 
-      max-width: 100%; 
-      padding: 0 15px; 
-      margin-left: auto; 
-      margin-right: auto; 
+    .container {{
+      max-width: 100%;
+      padding: 0 15px;
+      margin-left: auto;
+      margin-right: auto;
     }}
-    .tool-card {{ 
-      width: 100%; 
-      min-width: 140px; 
-      height: 160px; 
-      cursor: pointer; 
-      margin: auto; 
+    .tool-card {{
+      width: 100%;
+      min-width: 140px;
+      height: 160px;
+      cursor: pointer;
+      margin: auto;
       border-radius: 10px;
       background-color: #ffffff;
       margin-bottom: 10px;
     }}
-    .tool-icon {{ 
-      font-size: 40px; 
-      margin-bottom: 10px; 
+    .tool-icon {{
+      font-size: 40px;
+      margin-bottom: 10px;
     }}
-    .card {{ 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
-      transition: transform 0.3s, box-shadow 0.3s; 
+    .card {{
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
     }}
-    .card:hover {{ 
-      transform: translateY(-5px); 
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4); 
+    .card:hover {{
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }}
-    .card-title {{ 
-      font-size: 0.9rem; 
-      font-weight: 600; 
-      text-align: center; 
+    .card-title {{
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
     }}
-    .row {{ 
-      display: flex; 
-      flex-wrap: wrap; 
-      justify-content: space-between; 
-      gap: 10px; 
-      margin: 0 -15px; 
+    .row {{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0 -15px;
     }}
-    .modal-full {{ 
-      max-width: 100%; 
-      margin: 0; 
+    .modal-full {{
+      max-width: 100%;
+      margin: 0;
       width: 100vw;
     }}
-    .modal-full .modal-content {{ 
-      height: 100vh; 
-      border-radius: 0; 
+    .modal-full .modal-content {{
+      height: 100vh;
+      border-radius: 0;
       display: flex;
       flex-direction: column;
     }}
@@ -388,6 +391,18 @@ def index():
       flex-shrink: 0;
       padding: 10px 15px;
     }}
+     .btn-close {{
+    background: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%236c757d'%3E%3Cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707A1 1 0 01.293.293z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px 16px;
+    width: 24px;
+    height: 24px;
+    border: none;
+    opacity: 1;
+    cursor: pointer;
+}}
     .modal-title {{
       font-size: 1rem;
       white-space: nowrap;
@@ -395,50 +410,50 @@ def index():
       text-overflow: ellipsis;
       max-width: calc(100% - 40px);
     }}
-    .modal-body {{ 
-      padding: 0; 
-      flex-grow: 1; 
-      overflow-y: auto; 
+    .modal-body {{
+      padding: 0;
+      flex-grow: 1;
+      overflow-y: auto;
       overflow-x: hidden;
       position: relative;
     }}
-    .modal-footer {{ 
+    .modal-footer {{
       flex-shrink: 0;
-      justify-content: center; 
+      justify-content: center;
       padding: 10px;
     }}
-    .session-list ul {{ 
-      font-size: 0.9rem; 
-      margin-left: 20px; 
-      padding: 20px; 
+    .session-list ul {{
+      font-size: 0.9rem;
+      margin-left: 20px;
+      padding: 20px;
     }}
-    .session-list li {{ 
-      margin: 10px 0; 
-      position: relative; 
+    .session-list li {{
+      margin: 10px 0;
+      position: relative;
     }}
-    .session-icon {{ 
-      font-size: 16px; 
-      vertical-align: middle; 
+    .session-icon {{
+      font-size: 16px;
+      vertical-align: middle;
     }}
-    .session-link {{ 
-      color: #000; 
-      text-decoration: none; 
+    .session-link {{
+      color: #000;
+      text-decoration: none;
     }}
-    .session-link:hover {{ 
-      color: #007bff; 
-      text-decoration: none; 
+    .session-link:hover {{
+      color: #007bff;
+      text-decoration: none;
     }}
-    .loading-spinner, .error-message {{ 
-      position: absolute; 
-      top: 50%; 
-      left: 50%; 
-      transform: translate(-50%, -50%); 
+    .loading-spinner, .error-message {{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }}
-    .heartbeat {{ 
-      animation: heartbeat 1.5s ease-in-out infinite; 
-      border-radius: 50%; 
-      padding: 10px; 
-      background-color: rgba(0, 0, 0, 0.1); 
+    .heartbeat {{
+      animation: heartbeat 1.5s ease-in-out infinite;
+      border-radius: 50%;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.1);
     }}
     @keyframes heartbeat {{
       0% {{ transform: scale(1); }}
@@ -454,42 +469,42 @@ def index():
       border: none;
     }}
     @media (max-width: 576px) {{
-      .col-6 {{ 
-        flex: 0 0 calc(50% - 10px); 
-        max-width: calc(50% - 10px); 
+      .col-6 {{
+        flex: 0 0 calc(50% - 10px);
+        max-width: calc(50% - 10px);
       }}
-      .tool-card {{ 
-        min-width: 140px; 
-        height: 140px; 
+      .tool-card {{
+        min-width: 140px;
+        height: 140px;
       }}
-      .card-title {{ 
-        font-size: 0.85rem; 
+      .card-title {{
+        font-size: 0.85rem;
       }}
-      .tool-icon {{ 
-        font-size: 35px; 
+      .tool-icon {{
+        font-size: 35px;
       }}
-      .row {{ 
-        justify-content: space-between; 
-        margin-left: 0; 
-        margin-right: 0; 
+      .row {{
+        justify-content: space-between;
+        margin-left: 0;
+        margin-right: 0;
       }}
-      .container {{ 
-        padding-left: 10px; 
-        padding-right: 10px; 
+      .container {{
+        padding-left: 10px;
+        padding-right: 10px;
       }}
       .modal-title {{
         font-size: 0.9rem;
       }}
     }}
     @media (min-width: 577px) and (max-width: 767px) {{
-      .col-sm-4 {{ 
-        flex: 0 0 calc(33.333% - 10px); 
-        max-width: calc(33.333% - 10px); 
+      .col-sm-4 {{
+        flex: 0 0 calc(33.333% - 10px);
+        max-width: calc(33.333% - 10px);
       }}
     }}
     @media (min-width: 768px) {{
-      .col-md-3 {{ 
-        padding: 0 15px 10px; 
+      .col-md-3 {{
+        padding: 0 15px 10px;
       }}
     }}
     /* Prevent background scrolling when modal is open */
@@ -506,6 +521,7 @@ def index():
     .modal:not(.show) {{
       display: none !important;
     }}
+
   </style>
 </head>
 <body>
@@ -563,7 +579,7 @@ def index():
         // Function to load PDF
         function loadPdf() {{
           console.log(`Loading PDF: ${{pdfUrl}}`);
-          iframe.src = pdfUrl + '?v=' + new Date().getTime();
+          iframe.src = `https://docs.google.com/viewer?url=${{encodeURIComponent(pdfUrl)}}&embedded=true`;
           iframe.addEventListener('load', () => {{
             console.log(`Iframe loaded for URL: ${{iframe.src}}`);
             isLoaded = true;
@@ -571,6 +587,26 @@ def index():
             spinner.style.display = 'none';
             iframe.style.display = 'block';
             errorMessage.style.display = 'none';
+            // Update modal header, footer, and buttons after PDF loads
+            const modalHeader = pdfModal.querySelector('.modal-header');
+            const modalFooter = pdfModal.querySelector('.modal-footer');
+            const modalTitle = pdfModal.querySelector('.modal-title');
+            const backButton = pdfModal.querySelector('.back-to-sessions');
+            const closeButton = pdfModal.querySelector('.btn-close');
+            modalHeader.style.backgroundColor = '#313131';
+            modalHeader.style.color = '#ffffff';
+            modalFooter.style.backgroundColor = '#313131';
+            modalFooter.style.color = '#ffffff';
+            modalTitle.style.color = '#ffffff';
+
+          }}, {{ once: true }});
+          iframe.addEventListener('error', () => {{
+            console.log(`Iframe error for URL: ${{iframe.src}}`);
+            isLoaded = true;
+            clearTimeout(timeoutId);
+            spinner.style.display = 'none';
+            iframe.style.display = 'none';
+            errorMessage.style.display = 'flex';
           }}, {{ once: true }});
         }}
 
@@ -582,17 +618,14 @@ def index():
             if (data.valid) {{
               loadPdf();
             }} else {{
-              console.log(`PDF invalid: ${{data.reason}}`);
-              spinner.style.display = 'none';
-              iframe.style.display = 'none';
-              errorMessage.style.display = 'flex';
+              console.log(`PDF check failed: ${{data.reason}}. Attempting to load in iframe.`);
+              loadPdf(); // Fallback: try loading the PDF anyway
             }}
           }})
           .catch(error => {{
             console.error('Error checking PDF:', error);
-            spinner.style.display = 'none';
-            iframe.style.display = 'none';
-            errorMessage.style.display = 'flex';
+            console.log(`Server-side check failed. Attempting to load in iframe: ${{pdfUrl}}`);
+            loadPdf(); // Fallback: try loading the PDF anyway
           }});
 
         // Timeout after 15 seconds
@@ -619,17 +652,14 @@ def index():
               if (data.valid) {{
                 loadPdf();
               }} else {{
-                console.log(`PDF invalid on retry: ${{data.reason}}`);
-                spinner.style.display = 'none';
-                iframe.style.display = 'none';
-                errorMessage.style.display = 'flex';
+                console.log(`PDF check failed on retry: ${{data.reason}}. Attempting to load in iframe.`);
+                loadPdf(); // Fallback: try loading the PDF anyway
               }}
             }})
             .catch(error => {{
               console.error('Error retrying PDF:', error);
-              spinner.style.display = 'none';
-              iframe.style.display = 'none';
-              errorMessage.style.display = 'flex';
+              console.log(`Server-side check failed on retry. Attempting to load in iframe: ${{pdfUrl}}`);
+              loadPdf(); // Fallback: try loading the PDF anyway
             }});
           timeoutId = setTimeout(() => {{
             if (!isLoaded) {{
@@ -696,41 +726,55 @@ def index():
 def check_pdf():
     url = request.args.get('url')
     if not url:
+        app.logger.error("No URL provided to /check-pdf")
         return jsonify({"valid": False, "reason": "No URL provided"})
-    
+
     # Check if URL ends with .pdf
     if not url.lower().endswith('.pdf'):
+        app.logger.error(f"URL does not point to a PDF: {url}")
         return jsonify({"valid": False, "reason": "URL does not point to a PDF"})
-    
+
     try:
-        # Send HEAD request to check if the resource exists
-        response = requests.head(url, timeout=5, allow_redirects=True)
-        
+        # Use a custom user-agent to mimic a browser
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        # Increase timeout and disable proxies explicitly
+        response = requests.head(url, headers=headers, timeout=10, allow_redirects=True, proxies=None)
+
         # Check if the response is successful and content type is PDF
         if response.status_code == 200:
             content_type = response.headers.get('content-type', '').lower()
             if 'pdf' in content_type:
+                app.logger.info(f"Valid PDF: {url}")
                 return jsonify({"valid": True})
             else:
-                # Also check for common PDF content types
+                # Check Content-Disposition for PDF
                 if response.headers.get('content-disposition', '').lower().endswith('.pdf'):
+                    app.logger.info(f"Valid PDF via Content-Disposition: {url}")
                     return jsonify({"valid": True})
+                app.logger.error(f"URL does not return a PDF: {url}, Content-Type: {content_type}")
                 return jsonify({"valid": False, "reason": "URL does not return a PDF"})
         else:
             # Try with GET request if HEAD is not allowed
             if response.status_code == 405:
-                response = requests.get(url, timeout=5, stream=True)
+                response = requests.get(url, headers=headers, timeout=10, stream=True, proxies=None)
                 if response.status_code == 200:
                     content_type = response.headers.get('content-type', '').lower()
                     if 'pdf' in content_type:
+                        app.logger.info(f"Valid PDF via GET: {url}")
                         return jsonify({"valid": True})
                     else:
+                        app.logger.error(f"URL does not return a PDF via GET: {url}, Content-Type: {content_type}")
                         return jsonify({"valid": False, "reason": "URL does not return a PDF"})
                 else:
+                    app.logger.error(f"HTTP Status {response.status_code} for GET: {url}")
                     return jsonify({"valid": False, "reason": f"HTTP Status: {response.status_code}"})
             else:
+                app.logger.error(f"HTTP Status {response.status_code} for HEAD: {url}")
                 return jsonify({"valid": False, "reason": f"HTTP Status: {response.status_code}"})
     except requests.exceptions.RequestException as e:
+        app.logger.error(f"Request exception for {url}: {str(e)}")
         return jsonify({"valid": False, "reason": str(e)})
 
 if __name__ == "__main__":
